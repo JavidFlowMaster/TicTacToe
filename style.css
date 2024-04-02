@@ -1,48 +1,24 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-.container {
-    margin-top: 50px;
-}
-
-.board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-gap: 5px;
-    margin-bottom: 20px;
+#board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 210px;
 }
 
 .cell {
-    width: 100px;
-    height: 100px;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    font-size: 48px;
-    line-height: 100px;
-    cursor: pointer;
+  width: 70px;
+  height: 70px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .cell:hover {
-    background-color: #ddd;
+  background-color: #f0f0f0;
 }
 
-.message {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.reset-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.reset-button:hover {
-    background-color: #45a049;
+h1, p {
+  text-align: center;
 }
