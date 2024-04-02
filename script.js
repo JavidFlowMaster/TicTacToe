@@ -24,7 +24,7 @@ const handleCellClick = (e) => {
   gameState[clickedCellIndex] = currentPlayer;
   clickedCell.innerText = currentPlayer;
 
-  if (checkWin()) {
+  if (checkWin(currentPlayer)) {
     gameActive = false;
     status.innerText = `${currentPlayer} has won!`;
     return;
@@ -38,14 +38,48 @@ const handleCellClick = (e) => {
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   status.innerText = `${currentPlayer}'s turn`;
+
+  if (currentPlayer === 'O') {
+    makeWebMove();
+  }
 };
 
-const checkWin = () => {
+const checkWin = (player) => {
   return winningConditions.some((condition) => {
     return condition.every((index) => {
-      return gameState[index] === currentPlayer;
+      return gameState[index] === player;
     });
   });
+};
+
+const makeWebMove = () => {
+  const emptyCells = gameState.reduce((acc, cell, index) => {
+    if (cell === '') {
+      acc.push(index);
+    }
+    return acc;
+  }, []);
+
+  const webMoveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  const webMoveCell = document.querySelector(`[data-cell-index="${webMoveIndex}"]`);
+
+  gameState[webMoveIndex] = currentPlayer;
+  webMoveCell.innerText = currentPlayer;
+
+  if (checkWin(currentPlayer)) {
+    gameActive = false;
+    status.innerText = `${currentPlayer} has won!`;
+    return;
+  }
+
+  if (!gameState.includes('')) {
+    gameActive = false;
+    status.innerText = `It's a draw!`;
+    return;
+  }
+
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  status.innerText = `${currentPlayer}'s turn`;
 };
 
 document.querySelectorAll('.cell').forEach((cell) => {
