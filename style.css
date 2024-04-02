@@ -8,8 +8,11 @@
 
 #board {
   display: flex;
-  flex-wrap: wrap;
-  width: 210px;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
 }
 
 .cell {
