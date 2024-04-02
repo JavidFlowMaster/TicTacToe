@@ -53,18 +53,9 @@ const checkWin = (player) => {
 };
 
 const makeWebMove = () => {
-  const emptyCells = gameState.reduce((acc, cell, index) => {
-    if (cell === '') {
-      acc.push(index);
-    }
-    return acc;
-  }, []);
-
-  const webMoveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-  const webMoveCell = document.querySelector(`[data-cell-index="${webMoveIndex}"]`);
-
-  gameState[webMoveIndex] = currentPlayer;
-  webMoveCell.innerText = currentPlayer;
+  const bestMove = getBestMove();
+  gameState[bestMove.index] = currentPlayer;
+  document.querySelector(`[data-cell-index="${bestMove.index}"]`).innerText = currentPlayer;
 
   if (checkWin(currentPlayer)) {
     gameActive = false;
@@ -80,6 +71,63 @@ const makeWebMove = () => {
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   status.innerText = `${currentPlayer}'s turn`;
+};
+
+const getBestMove = () => {
+  let bestScore = -Infinity;
+  let bestMove;
+  for (let i = 0; i < 9; i++) {
+    if (gameState[i] === '') {
+      gameState[i] = 'O';
+      let score = minimax(gameState, 0, false);
+      gameState[i] = '';
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = { index: i, score: score };
+      }
+    }
+  }
+  return bestMove;
+};
+
+const scores = {
+  X: -1,
+  O: 1,
+  tie: 0,
+};
+
+const minimax = (state, depth, isMaximizing) => {
+  if (checkWin('X')) {
+    return scores.X;
+  } else if (checkWin('O')) {
+    return scores.O;
+  } else if (!state.includes('')) {
+    return scores.tie;
+  }
+
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (state[i] === '') {
+        state[i] = 'O';
+        let score = minimax(state, depth + 1, false);
+        state[i] = '';
+        bestScore = Math.max(score, bestScore);
+      }
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (state[i] === '') {
+        state[i] = 'X';
+        let score = minimax(state, depth + 1, true);
+        state[i] = '';
+        bestScore = Math.min(score, bestScore);
+      }
+    }
+    return bestScore;
+  }
 };
 
 document.querySelectorAll('.cell').forEach((cell) => {
